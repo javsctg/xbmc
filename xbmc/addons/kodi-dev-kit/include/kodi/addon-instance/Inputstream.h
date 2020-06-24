@@ -331,7 +331,11 @@ extern "C"
                                   struct INPUTSTREAM_IDS* ids);
     bool(__cdecl* get_stream)(const struct AddonInstance_InputStream* instance,
                               int streamid,
-                              struct INPUTSTREAM_INFO* info);
+                              struct INPUTSTREAM_INFO* info,
+                              KODI_HANDLE* demuxStream,
+                              KODI_HANDLE (*transfer_stream)(KODI_HANDLE handle,
+                                                             int streamId,
+                                                             struct INPUTSTREAM_INFO* stream));
     void(__cdecl* enable_stream)(const struct AddonInstance_InputStream* instance,
                                  int streamid,
                                  bool enable);
@@ -444,7 +448,12 @@ public:
      * @return struc of stream properties
      * @remarks
      */
-  virtual bool GetStream(int streamid, INPUTSTREAM_INFO& stream) = 0;
+  virtual bool GetStream(int streamid,
+                         INPUTSTREAM_INFO* info,
+                         KODI_HANDLE* demuxStream,
+                         KODI_HANDLE (*transfer_stream)(KODI_HANDLE handle,
+                                                        int streamId,
+                                                        struct INPUTSTREAM_INFO* stream)) = 0;
 
   /*!
      * Enable or disable a stream.
@@ -748,12 +757,17 @@ private:
     return ret;
   }
 
-  inline static bool ADDON_GetStream(const AddonInstance_InputStream* instance,
-                                     int streamid,
-                                     struct INPUTSTREAM_INFO* info)
+  inline static bool ADDON_GetStream(
+      const AddonInstance_InputStream* instance,
+      int streamid,
+      struct INPUTSTREAM_INFO* info,
+      KODI_HANDLE* demuxStream,
+      KODI_HANDLE (*transfer_stream)(KODI_HANDLE handle,
+                                     int streamId,
+                                     struct INPUTSTREAM_INFO* stream))
   {
     return static_cast<CInstanceInputStream*>(instance->toAddon->addonInstance)
-        ->GetStream(streamid, *info);
+        ->GetStream(streamid, info, demuxStream, transfer_stream);
   }
 
   inline static void ADDON_EnableStream(const AddonInstance_InputStream* instance,
@@ -897,7 +911,7 @@ private:
   {
     return static_cast<CInstanceInputStream*>(instance->toAddon->addonInstance)->IsRealTimeStream();
   }
-
+public: // temporary to have commit usable on addon
   AddonInstance_InputStream* m_instanceData;
 };
 
