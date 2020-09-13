@@ -9,15 +9,11 @@
 #pragma once
 
 #include "../addon_base.h"
+#include "inputstream/demux_packet.h"
 #include "inputstream/stream_codec.h"
 #include "inputstream/stream_constants.h"
 #include "inputstream/stream_crypto.h"
 #include "inputstream/timing_constants.h"
-#ifdef BUILD_KODI_ADDON
-#include "../../DemuxPacket.h"
-#else
-#include "cores/VideoPlayer/Interface/Addon/DemuxPacket.h"
-#endif
 
 // Increment this level always if you add features which can lead to compile failures in the addon
 #define INPUTSTREAM_VERSION_LEVEL 2
@@ -307,11 +303,11 @@ extern "C"
   typedef struct AddonToKodiFuncTable_InputStream /* internal */
   {
     KODI_HANDLE kodiInstance;
-    struct DemuxPacket* (*allocate_demux_packet)(void* kodiInstance, int data_size);
-    struct DemuxPacket* (*allocate_encrypted_demux_packet)(void* kodiInstance,
-                                                           unsigned int data_size,
-                                                           unsigned int encrypted_subsample_count);
-    void (*free_demux_packet)(void* kodiInstance, struct DemuxPacket* packet);
+    struct DEMUX_PACKET* (*allocate_demux_packet)(void* kodiInstance, int data_size);
+    struct DEMUX_PACKET* (*allocate_encrypted_demux_packet)(void* kodiInstance,
+                                                            unsigned int data_size,
+                                                            unsigned int encrypted_subsample_count);
+    void (*free_demux_packet)(void* kodiInstance, struct DEMUX_PACKET* packet);
   } AddonToKodiFuncTable_InputStream;
 
   struct AddonInstance_InputStream;
@@ -343,7 +339,7 @@ extern "C"
     void(__cdecl* demux_reset)(const struct AddonInstance_InputStream* instance);
     void(__cdecl* demux_abort)(const struct AddonInstance_InputStream* instance);
     void(__cdecl* demux_flush)(const struct AddonInstance_InputStream* instance);
-    struct DemuxPacket*(__cdecl* demux_read)(const struct AddonInstance_InputStream* instance);
+    struct DEMUX_PACKET*(__cdecl* demux_read)(const struct AddonInstance_InputStream* instance);
     bool(__cdecl* demux_seek_time)(const struct AddonInstance_InputStream* instance,
                                    double time,
                                    bool backwards,

@@ -558,7 +558,7 @@ public:
      *         The add-on should return NULL if an error occurred.
      * @remarks Return NULL if this add-on won't provide this function.
      */
-  virtual DemuxPacket* DemuxRead() { return nullptr; }
+  virtual DEMUX_PACKET* DemuxRead() { return nullptr; }
 
   /*!
      * Notify the InputStream addon/demuxer that Kodi wishes to seek the stream by time
@@ -685,7 +685,7 @@ public:
      * @param dataSize The size of the data that will go into the packet
      * @return The allocated packet
      */
-  DemuxPacket* AllocateDemuxPacket(int dataSize)
+  DEMUX_PACKET* AllocateDemuxPacket(int dataSize)
   {
     return m_instanceData->toKodi->allocate_demux_packet(m_instanceData->toKodi->kodiInstance,
                                                          dataSize);
@@ -696,7 +696,7 @@ public:
      * @param dataSize The size of the data that will go into the packet
      * @return The allocated packet
      */
-  DemuxPacket* AllocateEncryptedDemuxPacket(int dataSize, unsigned int encryptedSubsampleCount)
+  DEMUX_PACKET* AllocateEncryptedDemuxPacket(int dataSize, unsigned int encryptedSubsampleCount)
   {
     return m_instanceData->toKodi->allocate_encrypted_demux_packet(
         m_instanceData->toKodi->kodiInstance, dataSize, encryptedSubsampleCount);
@@ -706,7 +706,7 @@ public:
      * @brief Free a packet that was allocated with AllocateDemuxPacket
      * @param packet The packet to free
      */
-  void FreeDemuxPacket(DemuxPacket* packet)
+  void FreeDemuxPacket(DEMUX_PACKET* packet)
   {
     return m_instanceData->toKodi->free_demux_packet(m_instanceData->toKodi->kodiInstance, packet);
   }
@@ -864,7 +864,7 @@ private:
     static_cast<CInstanceInputStream*>(instance->toAddon->addonInstance)->DemuxFlush();
   }
 
-  inline static DemuxPacket* ADDON_DemuxRead(const AddonInstance_InputStream* instance)
+  inline static DEMUX_PACKET* ADDON_DemuxRead(const AddonInstance_InputStream* instance)
   {
     return static_cast<CInstanceInputStream*>(instance->toAddon->addonInstance)->DemuxRead();
   }
