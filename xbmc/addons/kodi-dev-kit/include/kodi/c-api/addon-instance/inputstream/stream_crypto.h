@@ -11,7 +11,7 @@
 #include <inttypes.h>
 #include <string.h>
 
-#define STREAMCRYPTO_VERSION_LEVEL 1
+#define STREAMCRYPTO_VERSION_LEVEL 2
 
 #ifdef __cplusplus
 extern "C"
