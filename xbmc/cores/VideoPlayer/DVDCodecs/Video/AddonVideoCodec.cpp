@@ -245,7 +245,7 @@ CDVDVideoCodec::VCReturn CAddonVideoCodec::GetPicture(VideoPicture* pVideoPictur
     if (pVideoPicture->videoBuffer)
       pVideoPicture->videoBuffer->Release();
 
-    pVideoPicture->videoBuffer = static_cast<CVideoBuffer*>(picture.buffer);
+    pVideoPicture->videoBuffer = static_cast<CVideoBuffer*>(picture.videoBufferHandle);
 
     int strides[YuvImage::MAX_PLANES], planeOffsets[YuvImage::MAX_PLANES];
     for (int i = 0; i<YuvImage::MAX_PLANES; ++i)
@@ -314,7 +314,7 @@ void CAddonVideoCodec::Reset()
   {
     if (ret == VIDEOCODEC_RETVAL::VC_PICTURE)
     {
-      videoBuffer = static_cast<CVideoBuffer*>(picture.buffer);
+      videoBuffer = static_cast<CVideoBuffer*>(picture.videoBufferHandle);
       if (videoBuffer)
         videoBuffer->Release();
     }
@@ -332,7 +332,7 @@ bool CAddonVideoCodec::GetFrameBuffer(VIDEOCODEC_PICTURE &picture)
     return false;
   }
   picture.decodedData = videoBuffer->GetMemPtr();
-  picture.buffer = videoBuffer;
+  picture.videoBufferHandle = videoBuffer;
 
   return true;
 }

@@ -187,7 +187,7 @@ extern "C"
     /// To handle the input stream buffer, this is given by Kodi using
     /// @ref kodi::addon::CInstanceVideoCodec::GetFrameBuffer and must be
     /// released again using @ref kodi::addon::CInstanceVideoCodec::ReleaseFrameBuffer.
-    KODI_HANDLE buffer; //< will be passed in release_frame_buffer
+    KODI_HANDLE videoBufferHandle; //< will be passed in release_frame_buffer
   };
   ///@}
   //----------------------------------------------------------------------------
