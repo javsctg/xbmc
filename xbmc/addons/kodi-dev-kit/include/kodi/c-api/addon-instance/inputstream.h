@@ -11,7 +11,7 @@
 #include "../../StreamCodec.h"
 #include "../../StreamCrypto.h"
 #include "../addon_base.h"
-
+#include "inputstream/timing_constants.h"
 #ifdef BUILD_KODI_ADDON
 #include "../../DemuxPacket.h"
 #include "../../InputStreamConstants.h"
