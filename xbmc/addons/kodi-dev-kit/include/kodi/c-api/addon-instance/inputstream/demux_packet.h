@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "timing_constants.h"
+
 #include <stdint.h>
 
 #define DEMUX_SPECIALID_STREAMINFO -10
