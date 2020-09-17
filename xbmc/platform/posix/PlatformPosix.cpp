@@ -8,6 +8,11 @@
 
 #include "PlatformPosix.h"
 
+#include "filesystem/SpecialProtocol.h"
+
+#include <cstdlib>
+#include <time.h>
+
 std::atomic_flag CPlatformPosix::ms_signalFlag;
 
 void CPlatformPosix::Init()
@@ -27,4 +32,26 @@ bool CPlatformPosix::TestQuitFlag()
 void CPlatformPosix::RequestQuit()
 {
   ms_signalFlag.clear();
+}
+
+void CPlatformPosix::InitTimezone()
+{
+  tzset();
+}
+
+bool CPlatformPosix::SetEnvHomePath()
+{
+  // set special://envhome
+  if (getenv("HOME"))
+  {
+    CSpecialProtocol::SetEnvHomePath(getenv("HOME"));
+    return true;
+  }
+  fprintf(stderr, "The HOME environment variable is not set!\n");
+  return false;
+}
+
+void CPlatformPosix::SetEnvOSName()
+{
+  setenv("OS", "Linux", true);
 }

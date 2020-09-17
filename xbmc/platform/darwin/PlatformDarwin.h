@@ -20,4 +20,6 @@ class CPlatformDarwin : public CPlatformPosix
     ~CPlatformDarwin() override = default;
 
     void Init() override;
+
+    static void SetEnvOSName();
 };

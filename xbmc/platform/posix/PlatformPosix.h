@@ -19,6 +19,9 @@ public:
 
   static bool TestQuitFlag();
   static void RequestQuit();
+  static void InitTimezone();
+  static bool SetEnvHomePath();
+  static void SetEnvOSName();
 
 private:
   static std::atomic_flag ms_signalFlag;

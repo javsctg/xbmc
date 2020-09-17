@@ -17,3 +17,8 @@ void CPlatformDarwin::Init()
   CPlatformPosix::Init();
   setenv("SSL_CERT_FILE", CSpecialProtocol::TranslatePath("special://xbmc/system/certs/cacert.pem").c_str(), 0);
 }
+
+void CPlatformDarwin::SetEnvOSName()
+{
+  setenv("OS", "OS X", true);
+}

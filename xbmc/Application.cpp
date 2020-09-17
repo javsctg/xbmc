@@ -156,6 +156,7 @@
 #endif
 #ifdef TARGET_DARWIN
 #include "platform/darwin/DarwinUtils.h"
+#include "platform/darwin/PlatformDarwin.h"
 #endif
 
 #ifdef HAS_DVD_DRIVE
@@ -392,27 +393,15 @@ bool CApplication::Create(const CAppParamParser &params)
   CApplicationMessenger::GetInstance().RegisterReceiver(&CServiceBroker::GetPlaylistPlayer());
   CApplicationMessenger::GetInstance().SetGUIThread(m_threadID);
 
-  //! @todo - move to CPlatformXXX
-#ifdef TARGET_POSIX
-  tzset();   // Initialize timezone information variables
+#if defined(TARGET_POSIX)
+  CPlatformPosix::InitTimezone(); // Initialize timezone information variables
+  if (!CPlatformPosix::SetEnvHomePath())
+  {
+    /* Cleanup. Leaving this out would lead to another crash */
+    m_ServiceManager->DeinitStageOne();
+    return false;
+  }
 #endif
-
-
-  //! @todo - move to CPlatformXXX
-  #if defined(TARGET_POSIX)
-    // set special://envhome
-    if (getenv("HOME"))
-    {
-      CSpecialProtocol::SetEnvHomePath(getenv("HOME"));
-    }
-    else
-    {
-      fprintf(stderr, "The HOME environment variable is not set!\n");
-      /* Cleanup. Leaving this out would lead to another crash */
-      m_ServiceManager->DeinitStageOne();
-      return false;
-    }
-  #endif
 
   // copy required files
   CopyUserDataIfNeeded("special://masterprofile/", "RssFeeds.xml");
@@ -540,9 +529,9 @@ bool CApplication::Create(const CAppParamParser &params)
   // for python scripts that check the OS
   //! @todo - move to CPlatformXXX
 #if defined(TARGET_DARWIN)
-  setenv("OS","OS X",true);
+  CPlatformDarwin::SetEnvOSName();
 #elif defined(TARGET_POSIX)
-  setenv("OS","Linux",true);
+  CPlatformPosix::SetEnvOSName();
 #elif defined(TARGET_WINDOWS)
   CEnvironment::setenv("OS", "win32");
 #endif
