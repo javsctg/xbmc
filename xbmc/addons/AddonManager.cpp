@@ -762,6 +762,10 @@ bool CAddonMgr::EnableSingle(const std::string& id)
     return false;
   m_disabled.erase(id);
 
+  // If enabling a repo add-on without an origin, set its origin to its own id
+  if (addon->HasType(ADDON_REPOSITORY) && addon->Origin().empty())
+    SetAddonOrigin(id, id, false);
+
   CServiceBroker::GetEventLog().Add(EventPtr(new CAddonManagementEvent(addon, 24064)));
 
   CLog::Log(LOGDEBUG, "CAddonMgr: enabled %s", addon->ID().c_str());
@@ -805,7 +809,8 @@ bool CAddonMgr::CanAddonBeDisabled(const std::string& ID)
     return false;
 
   CSingleLock lock(m_critSection);
-  if (IsSystemAddon(ID))
+  // Non-optional system add-ons can not be disabled
+  if (IsSystemAddon(ID) && !IsOptionalSystemAddon(ID))
     return false;
 
   AddonPtr localAddon;
@@ -848,14 +853,23 @@ bool CAddonMgr::CanAddonBeInstalled(const AddonPtr& addon)
 
 bool CAddonMgr::CanUninstall(const AddonPtr& addon)
 {
-  return addon && CanAddonBeDisabled(addon->ID()) &&
-      !StringUtils::StartsWith(addon->Path(), CSpecialProtocol::TranslatePath("special://xbmc/addons"));
+  return addon && !IsSystemAddon(addon->ID()) && CanAddonBeDisabled(addon->ID()) &&
+         !StringUtils::StartsWith(addon->Path(),
+                                  CSpecialProtocol::TranslatePath("special://xbmc/addons"));
 }
 
 bool CAddonMgr::IsSystemAddon(const std::string& id)
 {
   CSingleLock lock(m_critSection);
-  return std::find(m_systemAddons.begin(), m_systemAddons.end(), id) != m_systemAddons.end();
+  return IsOptionalSystemAddon(id) ||
+         std::find(m_systemAddons.begin(), m_systemAddons.end(), id) != m_systemAddons.end();
+}
+
+bool CAddonMgr::IsOptionalSystemAddon(const std::string& id)
+{
+  CSingleLock lock(m_critSection);
+  return std::find(m_optionalSystemAddons.begin(), m_optionalSystemAddons.end(), id) !=
+         m_optionalSystemAddons.end();
 }
 
 bool CAddonMgr::LoadAddonDescription(const std::string &directory, AddonPtr &addon)
@@ -885,36 +899,6 @@ bool CAddonMgr::RemoveUpdateRuleFromList(const std::string& id, AddonUpdateRule 
 bool CAddonMgr::IsAutoUpdateable(const std::string& id) const
 {
   return m_updateRules.IsAutoUpdateable(id);
-}
-
-bool CAddonMgr::AddonsFromRepoXML(const CRepository::DirInfo& repo, const std::string& xml, VECADDONS& addons)
-{
-  CXBMCTinyXML doc;
-  if (!doc.Parse(xml))
-  {
-    CLog::Log(LOGERROR, "CAddonMgr::{}: Failed to parse addons.xml", __FUNCTION__);
-    return false;
-  }
-
-  if (doc.RootElement() == nullptr || doc.RootElement()->ValueStr() != "addons")
-  {
-    CLog::Log(LOGERROR, "CAddonMgr::{}: Failed to parse addons.xml. Malformed", __FUNCTION__);
-    return false;
-  }
-
-  // each addon XML should have a UTF-8 declaration
-  auto element = doc.RootElement()->FirstChildElement("addon");
-  while (element)
-  {
-    auto addonInfo = CAddonInfoBuilder::Generate(element, repo);
-    auto addon = CAddonBuilder::Generate(addonInfo, ADDON_UNKNOWN);
-    if (addon)
-      addons.push_back(std::move(addon));
-
-    element = element->NextSiblingElement("addon");
-  }
-
-  return true;
 }
 
 bool CAddonMgr::IsCompatible(const IAddon& addon) const
@@ -1127,6 +1111,37 @@ bool CAddonMgr::SetAddonOrigin(const std::string& addonId, const std::string& re
   const AddonInfoPtr info = GetAddonInfo(addonId);
   if (info)
     m_database.GetInstallData(info);
+  return true;
+}
+
+bool CAddonMgr::AddonsFromRepoXML(const CRepository::DirInfo& repo,
+                                  const std::string& xml,
+                                  std::vector<AddonInfoPtr>& addons)
+{
+  CXBMCTinyXML doc;
+  if (!doc.Parse(xml))
+  {
+    CLog::Log(LOGERROR, "CAddonMgr::{}: Failed to parse addons.xml", __func__);
+    return false;
+  }
+
+  if (doc.RootElement() == nullptr || doc.RootElement()->ValueStr() != "addons")
+  {
+    CLog::Log(LOGERROR, "CAddonMgr::{}: Failed to parse addons.xml. Malformed", __func__);
+    return false;
+  }
+
+  // each addon XML should have a UTF-8 declaration
+  auto element = doc.RootElement()->FirstChildElement("addon");
+  while (element)
+  {
+    auto addonInfo = CAddonInfoBuilder::Generate(element, repo);
+    if (addonInfo)
+      addons.emplace_back(addonInfo);
+
+    element = element->NextSiblingElement("addon");
+  }
+
   return true;
 }
 

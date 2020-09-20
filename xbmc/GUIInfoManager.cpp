@@ -469,6 +469,22 @@ const infomap integer_bools[] =  {{ "isequal",          INTEGER_IS_EQUAL },
 ///     video.
 ///     <p>
 ///   }
+///   \table_row3{   <b>`Player.offset(number).Title`</b>,
+///                  \anchor Player_Offset_Title
+///                  _string_,
+///     @return The title of audio or video which has an offset `number` with respect to the currently playing item.
+///     <p><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Offset_Title `Player.offset(number).Title`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`Player.position(number).Title`</b>,
+///                  \anchor Player_Position_Title
+///                  _string_,
+///     @return The title of the audio or video which has an offset `number` with respect to the start of the playlist.
+///     <p>><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Position_Title `Player.position(number).Title`\endlink
+///     <p>
+///   }
 ///   \table_row3{   <b>`Player.Muted`</b>,
 ///                  \anchor Player_Muted
 ///                  _boolean_,
@@ -553,11 +569,43 @@ const infomap integer_bools[] =  {{ "isequal",          INTEGER_IS_EQUAL },
 ///     @return The full path of the currently playing song or movie
 ///     <p>
 ///   }
+///   \table_row3{   <b>`Player.offset(number).Folderpath`</b>,
+///                  \anchor Player_Offset_Folderpath
+///                  _string_,
+///     @return The full path of the audio or video file which has an offset `number` with respect to the currently playing item.
+///     <p><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Offset_Folderpath `Player.offset(number).Folderpath`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`Player.position(number).Folderpath`</b>,
+///                  \anchor Player_Position_Folderpath
+///                  _string_,
+///     @return The full path of the audio or video file which has an offset `number` with respect to the start of the playlist.
+///     <p>><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Position_Folderpath `Player.position(number).Folderpath`\endlink
+///     <p>
+///   }
 ///   \table_row3{   <b>`Player.FilenameAndPath`</b>,
 ///                  \anchor Player_FilenameAndPath
 ///                  _string_,
 ///     @return The full path with filename of the currently
 ///     playing song or movie
+///     <p>
+///   }
+///   \table_row3{   <b>`Player.offset(number).FilenameAndPath`</b>,
+///                  \anchor Player_Offset_FilenameAndPath
+///                  _string_,
+///     @return The full path with filename of audio or video file which has an offset `number` with respect to the currently playing item.
+///     <p><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Offset_FilenameAndPath `Player.offset(number).FilenameAndPath`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`Player.position(number).FilenameAndPath`</b>,
+///                  \anchor Player_Position_FilenameAndPath
+///                  _string_,
+///     @return The full path with filename of the audio or video file which has an offset `number` with respect to the start of the playlist.
+///     <p>><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Position_FilenameAndPath `Player.position(number).FilenameAndPath`\endlink
 ///     <p>
 ///   }
 ///   \table_row3{   <b>`Player.Filename`</b>,
@@ -566,6 +614,22 @@ const infomap integer_bools[] =  {{ "isequal",          INTEGER_IS_EQUAL },
 ///     @return The filename of the currently playing media.
 ///     <p><hr>
 ///     @skinning_v13 **[New Infolabel]** \link Player_Filename `Player.Filename`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`Player.offset(number).Filename`</b>,
+///                  \anchor Player_Offset_Filename
+///                  _string_,
+///     @return The filename of audio or video file which has an offset `number` with respect to the currently playing item.
+///     <p><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Offset_Filename `Player.offset(number).Filename`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`Player.position(number).Filename`</b>,
+///                  \anchor Player_Position_Filename
+///                  _string_,
+///     @return The filename of the audio or video file which has an offset `number` with respect to the start of the playlist.
+///     <p>><hr>
+///     @skinning_v19 **[New Infolabel]** \link Player_Position_Filename `Player.position(number).Filename`\endlink
 ///     <p>
 ///   }
 ///   \table_row3{   <b>`Player.IsInternetStream`</b>,
@@ -2593,6 +2657,22 @@ const infomap musicpartymode[] = {{ "enabled",           MUSICPM_ENABLED },
 ///     @skinning_v19 **[New Infolabel]** \link MusicPlayer_BPM `MusicPlayer.BPM`\endlink
 ///     <p>
 ///   }
+///   \table_row3{   <b>`MusicPlayer.IsMultiDisc`</b>,
+///                  \anchor MusicPlayer_IsMultiDisc
+///                  _boolean_,
+///     @return Returns **true** if the album currently playing has more than one disc.
+///     <p><hr>
+///     @skinning_v19 **[New Infolabel]** \link MusicPlayer_IsMultiDisc `MusicPlayer.IsMultiDisc`\endlink
+///     <p>
+///   }
+///   \table_row3{   <b>`MusicPlayer.TotalDiscs`</b>,
+///                  \anchor MusicPlayer_TotalDiscs
+///                  _string_,
+///     @return The number of discs associated with the currently playing album.
+///     <p><hr>
+///     @skinning_v19 **[New Infolabel]** \link MusicPlayer_TotalDiscs `MusicPlayer.TotalDiscs`\endlink
+///     <p>
+///   }
 /// \table_end
 ///
 /// -----------------------------------------------------------------------------
@@ -2636,7 +2716,9 @@ const infomap musicplayer[] =    {{ "title",            MUSICPLAYER_TITLE },
                                   { "property",         MUSICPLAYER_PROPERTY },
                                   { "releasedate",      MUSICPLAYER_RELEASEDATE },
                                   { "originaldate",     MUSICPLAYER_ORIGINALDATE },
-                                  { "bpm",              MUSICPLAYER_BPM }
+                                  { "bpm",              MUSICPLAYER_BPM },
+                                  { "ismultidisc",      MUSICPLAYER_ISMULTIDISC },
+                                  { "totaldiscs",       MUSICPLAYER_TOTALDISCS }
 };
 
 /// \page modules__infolabels_boolean_conditions
@@ -9995,6 +10077,21 @@ int CGUIInfoManager::TranslateSingleString(const std::string &strCondition, bool
         return AddMultiInfo(CGUIInfo(value, 1, position)); // 1 => relative
       }
     }
+    else if (info[0].name == "player")
+    { //! @todo these two don't allow duration(foo) and also don't allow more than this number of levels...
+      if (info[1].name == "position")
+      {
+        int position = atoi(info[1].param().c_str());
+        int value = TranslatePlayerString(info[2].name); // player.position(foo).bar
+        return AddMultiInfo(CGUIInfo(value, 2, position)); // 2 => absolute (0 used for not set)
+      }
+      else if (info[1].name == "offset")
+      {
+        int position = atoi(info[1].param().c_str());
+        int value = TranslatePlayerString(info[2].name); // player.offset(foo).bar
+        return AddMultiInfo(CGUIInfo(value, 1, position)); // 1 => relative
+      }
+    }
     else if (info[0].name == "container")
     {
       if (info[1].name == "listitem" ||
@@ -10104,6 +10201,16 @@ int CGUIInfoManager::TranslateMusicPlayerString(const std::string &info) const
 int CGUIInfoManager::TranslateVideoPlayerString(const std::string& info) const
 {
   for (const infomap& i : videoplayer)
+  {
+    if (info == i.str)
+      return i.val;
+  }
+  return 0;
+}
+
+int CGUIInfoManager::TranslatePlayerString(const std::string& info) const
+{
+  for (const infomap& i : player_labels)
   {
     if (info == i.str)
       return i.val;
